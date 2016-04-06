@@ -20,10 +20,20 @@ namespace GamersPoems
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IMessages messages)
+        public void Configure(IApplicationBuilder app,
+            IHostingEnvironment enviroment,
+            IMessages messages)
         {
             app.UseIISPlatformHandler();
 
+            if (enviroment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+
+                app.UseRuntimeInfoPage("/info");
+                app.UseWelcomePage("/IIS");
+            }
+            app.UseStaticFiles();
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync(messages.Hello());
