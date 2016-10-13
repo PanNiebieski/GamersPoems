@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using GamersPoems.Services;
+using Microsoft.Extensions.Logging;
 using GamersPoems.Services.Interface;
-using Microsoft.AspNet.Routing;
+
+using GamersPoems.Services;
+using Microsoft.AspNetCore.Routing;
 
 namespace GamersPoems
 {
@@ -22,17 +24,17 @@ namespace GamersPoems
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app,
+        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app,
             IHostingEnvironment enviroment,
             IMessages messages)
         {
-            app.UseIISPlatformHandler();
+            //app.UseIISPlatformHandler();
 
             if (enviroment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
 
-                app.UseRuntimeInfoPage("/info");
+                //app.UseRuntimeInfoPage("/info");
                 app.UseWelcomePage("/IIS");
             }
 
@@ -49,14 +51,9 @@ namespace GamersPoems
         private void SetRoutes(IRouteBuilder routeBuilder)
         {
             // Home / Index
-            routeBuilder.MapRoute("MyDefault", 
+            routeBuilder.MapRoute("MyDefault",
                 "{controller=Home}/{action=Index}/{id?}");
         }
 
-
-
-
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }
