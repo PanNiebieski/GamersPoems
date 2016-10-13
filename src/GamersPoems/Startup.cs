@@ -7,15 +7,17 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.DependencyInjection;
 using GamersPoems.Services;
+using GamersPoems.Services.Interface;
+using Microsoft.AspNet.Routing;
 
 namespace GamersPoems
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+            services.AddScoped<IGamesData, GamesData>();
             services.AddSingleton<IMessages, Messages>();
         }
 
@@ -33,12 +35,26 @@ namespace GamersPoems
                 app.UseRuntimeInfoPage("/info");
                 app.UseWelcomePage("/IIS");
             }
+
             app.UseStaticFiles();
+
+            app.UseMvc(SetRoutes);
+
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync(messages.Hello());
             });
         }
+
+        private void SetRoutes(IRouteBuilder routeBuilder)
+        {
+            // Home / Index
+            routeBuilder.MapRoute("MyDefault", 
+                "{controller=Home}/{action=Index}/{id?}");
+        }
+
+
+
 
         // Entry point for the application.
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
